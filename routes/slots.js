@@ -17,8 +17,22 @@ router.post('/', async (req, res) => {
 
 
 router.patch('/:id', async (req, res) => {
-  const updated = await Slot.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(updated);
+  try {
+    const slot = await Slot.findById(req.params.id);
+    if (!slot) return res.status(404).json({ error: 'Slot not found' });
+    if (req.body.assignedTo && slot.assignedTo && slot.status === 'Occupied') {
+      return res.status(400).json({
+        error: `Cannot assign vehicle. Slot is already occupied by ${slot.assignedTo}.`
+      });
+    }
+
+
+    Object.assign(slot, req.body);
+    await slot.save();
+    res.json(slot);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 router.delete('/:id', async (req, res) => {
