@@ -14,7 +14,9 @@ const slotSchema = new mongoose.Schema({
   assignedTo: {
     type: String,
     default: ''
-  }
+  },
+  entryTime: { type: Date, default: null },
+  exitTime: { type: Date, default: null }
 });
 
 module.exports = mongoose.model('Slot', slotSchema);

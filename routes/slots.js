@@ -21,4 +21,9 @@ router.patch('/:id', async (req, res) => {
   res.json(updated);
 });
 
+router.delete('/:id', async (req, res) => {
+  await Slot.findByIdAndDelete(req.params.id);
+  res.status(204).send();
+});
+
 module.exports = router;
